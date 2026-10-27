@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Data lives under teams/{teamCode}/ticks|notes/{item}.
+    // Only people who know the team code can find the data; nothing else is readable.
+    match /teams/{team}/{col}/{id} {
+      allow read, write: if col in ['ticks', 'notes']
+                         && team.size() >= 6 && team.size() <= 40;
+    }
+  }
+}
